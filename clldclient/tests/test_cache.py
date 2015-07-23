@@ -11,14 +11,24 @@ from mock import patch, Mock
 
 @all_requests
 def clld(url, request):
-    headers = {'content-type': 'application/json'}
     content = {
-        '/resource/languoid/id/stan1295.json': {
-            'id': 'stan1295', 'name': 'Standard German'}
+        '/resource/languoid/id/stan1295.json': (
+            'application/json',
+            {'id': 'stan1295', 'name': 'Standard German'}),
+        '/resource/languoid/id/stan1295.rdf': (
+            'application/rdf+xml',
+            """\
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dcterms="http://purl.org/dc/terms/">
+    <rdf:Description rdf:about="http://glottolog.org/resource/languoid/id/stan1295">
+        <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/7242"/>
+    </rdf:Description>
+</rdf:RDF>
+"""),
     }.get(url.path)
     if content is None:
         return response(404, 'not found', {}, None, 5, request)
-    return response(200, content, headers, None, 5, request)
+    return response(200, content[1], {'content-type': content[0]}, None, 5, request)
 
 
 class Tests(TestCase):
@@ -44,3 +54,5 @@ class Tests(TestCase):
                 self.assertNotEquals(r1.created, r2.created)
                 self.assertRaises(KeyError, cache.get, 'http://glottolog.org/unknown')
                 self.assertEquals(cache.get('http://glottolog.org/unknown', default=1), 1)
+                res = cache.get('http://glottolog.org/resource/languoid/id/stan1295.rdf')
+                assert hasattr(res.content, 'triples')

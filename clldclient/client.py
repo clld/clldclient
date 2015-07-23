@@ -7,15 +7,14 @@ from clldclient.cache import Cache
 
 
 class Client(object):
-    __host__ = None
-
-    def __init__(self):
+    def __init__(self, host):
+        self.host = host
         self.cache = Cache()
 
     def get(self, url, **query):
         url = URL(url)
         if not url.host():
-            url = url.host(self.__host__)
+            url = url.host(self.host)
         if not url.scheme():
             url = url.scheme('http')
         for k, v in query.items():

@@ -12,6 +12,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.sql import select
 import requests
+import rdflib
 
 import clldclient
 
@@ -47,16 +48,19 @@ class Resource(object):
     def content(self):
         if 'json' in self.content_type:
             return json.loads(self._content)
+        if 'rdf+xml' in self.content_type:
+            g = rdflib.Graph()
+            return g.parse(data=self._content, format='xml')
         return self._content  # pragma: no cover
 
 
 class Cache(object):
     def __init__(self):
         cache_dir = user_cache_dir(clldclient.__name__)
+        self.path = os.path.join(cache_dir, 'db.sqlite')
         if not os.path.exists(cache_dir):
             try:
                 os.makedirs(cache_dir)
-                self.path = os.path.join(cache_dir, 'db.sqlite')
             except OSError:  # pragma: no cover
                 self.path = None
         self.db = self.init_db()

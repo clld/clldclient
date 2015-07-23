@@ -9,11 +9,12 @@ requires = [
     'requests',
     'AppDirs',
     'purl',
+    'rdflib',
 ]
 
 setup(
     name='clldclient',
-    version="0.3",
+    version="0.4",
     description='A python wrapper for the API exposed by clld apps',
     author='Robert Forkel',
     author_email='xrotwang@googlemail.com',

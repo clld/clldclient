@@ -14,8 +14,7 @@ class Tests(TestCase):
                 return url
 
         with patch('clldclient.client.Cache', MockCache):
-            client = Client()
-            client.__host__ = 'localhost'
+            client = Client('localhost')
             self.assertEquals(client.get('/p'), 'http://localhost/p')
             self.assertEquals(client.get('/p', q='s'), 'http://localhost/p?q=s')
             self.assertEquals(
