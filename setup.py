@@ -20,7 +20,7 @@ def read(fname):
 
 setup(
     name='clldclient',
-    version="0.1",
+    version="0.2",
     description='A python wrapper for the API exposed by clld apps',
     long_description=read("README.md"),
     author='Robert Forkel',
