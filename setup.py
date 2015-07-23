@@ -11,23 +11,15 @@ requires = [
     'purl',
 ]
 
-
-def read(fname):
-    with open(fname) as fp:
-        content = fp.read()
-    return content
-
-
 setup(
     name='clldclient',
-    version="0.2",
+    version="0.3",
     description='A python wrapper for the API exposed by clld apps',
-    long_description=read("README.md"),
     author='Robert Forkel',
     author_email='xrotwang@googlemail.com',
     url='https://github.com/clld/clldclient',
     install_requires=requires,
-    license=read("LICENSE"),
+    license='Apache 2',
     zip_safe=False,
     keywords='linguistics',
     classifiers=[
