@@ -1,32 +1,38 @@
 # coding: utf8
+"""
+To make clldclient reasonably performant and not too taxing on clld apps, we cache all
+HTTP responses in a database. This module provides the database implementation.
+"""
 from __future__ import unicode_literals, print_function
 import os
 import datetime
 import json
+from collections import OrderedDict
 import logging
 log = logging.getLogger(__name__)
 
 from appdirs import user_cache_dir
 from sqlalchemy import (
-    Table, Column, Integer, DateTime, String, Binary, create_engine, MetaData,
+    Table, Column, Integer, DateTime, String, Binary, create_engine, MetaData, desc,
 )
-from sqlalchemy.sql import select
+from sqlalchemy.sql import select, functions
 import requests
-import rdflib
+from purl import URL
 
 import clldclient
+from clldclient.link_header import get_links
+from clldclient.util import graph
 
 
 metadata = MetaData()
-
-
-resources = Table(
-    'resources',
+responses = Table(
+    'responses',
     metadata,
     Column('pk', Integer, primary_key=True),
     Column('created', DateTime, default=datetime.datetime.utcnow),
+    Column('host', String),
     Column('url', String),
-    Column('content_type', String),
+    Column('headers', String),
     Column('content', Binary),
 )
 
@@ -37,20 +43,34 @@ class NoDefault(object):
 NO_DEFAULT = NoDefault()
 
 
-class Resource(object):
-    def __init__(self, created, url, content_type, content):
+class Response(object):
+    """Data of a response for an HTTP request to clld app.
+    """
+    def __init__(self, created, host, url, headers, content):
         self.created = created
         self.url = url
+        self.host = host
         self._content = content
-        self.content_type = content_type
+        self.headers = json.loads(headers)
+
+    @property
+    def content_type(self):
+        return self.headers['content-type']
+
+    @property
+    def mimetype(self):
+        return self.content_type.split(';')[0].strip()
+
+    @property
+    def links(self):
+        return list(get_links(self.headers.get('link')))
 
     @property
     def content(self):
         if 'json' in self.content_type:
             return json.loads(self._content)
         if 'rdf+xml' in self.content_type:
-            g = rdflib.Graph()
-            return g.parse(data=self._content, format='xml')
+            return graph(self._content)
         return self._content  # pragma: no cover
 
 
@@ -76,13 +96,17 @@ class Cache(object):
         return db
 
     def get(self, url, default=NO_DEFAULT):
+        """Retrieve a Response object for a given URL.
+        """
+        url = URL(url)
         row = self.db.execute(
             select([
-                resources.c.created,
-                resources.c.url,
-                resources.c.content_type,
-                resources.c.content])
-            .where(resources.c.url == url)).fetchone()
+                responses.c.created,
+                responses.c.host,
+                responses.c.url,
+                responses.c.headers,
+                responses.c.content])
+            .where(responses.c.url == url.as_string())).fetchone()
         if not row:
             log.info('cache miss %s' % url)
             row = self.add(url)
@@ -93,20 +117,45 @@ class Cache(object):
                 return default
         else:
             log.info('cache hit %s' % url)
-        return Resource(*row)
+        return Response(*row)
 
     def add(self, url):
-        response = requests.get(url)
+        response = requests.get(url.as_string())
         if response.status_code == requests.codes.ok:
-            now = datetime.datetime.utcnow()
-            self.db.execute(resources.insert().values(
-                created=now,
-                url=url,
-                content_type=response.headers['content-type'],
-                content=response.content))
-            return now, url, response.headers['content-type'], response.content
+            values = OrderedDict()
+            values['created'] = datetime.datetime.utcnow()
+            values['host'] = url.host()
+            values['url'] = url.as_string()
+            values['headers'] = json.dumps(dict(response.headers.items()))
+            values['content'] = response.content
+            self.db.execute(responses.insert().values(**values))
+            return values.values()
 
     def drop(self):
         if self.path and os.path.exists(self.path):
             os.remove(self.path)
         self.db = self.init_db()
+
+    def stats(self):
+        """
+        select host, count(pk), min(created), max(created) from responses group by host;
+        """
+        q = select([
+            responses.c.host.label('host'),
+            functions.count(responses.c.pk).label('amount'),
+            functions.min(responses.c.created),
+            functions.max(responses.c.created),
+        ]).group_by('host').order_by(desc('amount'))
+        return self.db.execute(q).fetchall()
+
+    def purge(self, host=None, before=None, after=None):
+        sql = responses.delete()
+        if host:
+            sql = sql.where(responses.c.host == host)
+        if before:
+            sql = sql.where(responses.c.created < before)
+        if after:
+            sql = sql.where(responses.c.created > after)
+        res = self.db.execute(sql)
+        log.info('%s rows deleted' % res.rowcount)
+        return res.rowcount

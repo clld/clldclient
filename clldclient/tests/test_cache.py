@@ -4,6 +4,8 @@ import os
 from unittest import TestCase
 from tempfile import mktemp
 import shutil
+import datetime
+import time
 
 from httmock import all_requests, response, HTTMock
 from mock import patch, Mock
@@ -16,7 +18,7 @@ def clld(url, request):
             'application/json',
             {'id': 'stan1295', 'name': 'Standard German'}),
         '/resource/languoid/id/stan1295.rdf': (
-            'application/rdf+xml',
+            'application/rdf+xml; charset=utf8',
             """\
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
          xmlns:dcterms="http://purl.org/dc/terms/">
@@ -55,4 +57,13 @@ class Tests(TestCase):
                 self.assertRaises(KeyError, cache.get, 'http://glottolog.org/unknown')
                 self.assertEquals(cache.get('http://glottolog.org/unknown', default=1), 1)
                 res = cache.get('http://glottolog.org/resource/languoid/id/stan1295.rdf')
+                self.assertEquals(res.mimetype, 'application/rdf+xml')
                 assert hasattr(res.content, 'triples')
+                self.assertEquals(res.links, [])
+                cached = {r[0]: r[1] for r in cache.stats()}['glottolog.org']
+                self.assertEquals(cached, cache.purge(host='glottolog.org'))
+                now = datetime.datetime.utcnow()
+                time.sleep(0.2)
+                cache.get('http://glottolog.org/resource/languoid/id/stan1295.json')
+                self.assertEquals(0, cache.purge(before=now, host='glottolog.org'))
+                self.assertEquals(1, cache.purge(after=now, host='glottolog.org'))

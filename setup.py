@@ -10,11 +10,12 @@ requires = [
     'AppDirs',
     'purl',
     'rdflib',
+    'uritemplate',
 ]
 
 setup(
     name='clldclient',
-    version="0.4",
+    version="0.5",
     description='A python wrapper for the API exposed by clld apps',
     author='Robert Forkel',
     author_email='xrotwang@googlemail.com',
