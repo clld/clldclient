@@ -21,7 +21,7 @@ from purl import URL
 
 import clldclient
 from clldclient.link_header import get_links
-from clldclient.util import graph
+from clldclient.util import graph, NO_DEFAULT
 
 
 metadata = MetaData()
@@ -35,12 +35,6 @@ responses = Table(
     Column('headers', String),
     Column('content', Binary),
 )
-
-
-class NoDefault(object):
-    pass
-
-NO_DEFAULT = NoDefault()
 
 
 class Response(object):

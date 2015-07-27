@@ -58,8 +58,9 @@ class Glottolog(Database):
 
     def languoid(self, code):
         type = 'iso' if ISO_CODE_PATTERN.match(code) else 'id'
-        return Languoid(
-            self.get('/resource/languoid/{0}/{1}.json'.format(type, code)).content)
+        res = self.get('/resource/languoid/{0}/{1}.json'.format(type, code), default=None)
+        if res:
+            return Languoid(res.content)
 
     def refs(self, glottocode, limit=100):
         g = self.get('/resource/languoid/id/{0}.rdf'.format(glottocode))

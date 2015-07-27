@@ -13,6 +13,7 @@ from purl import URL
 from uritemplate import expand
 
 from clldclient.cache import Cache
+from clldclient.util import NO_DEFAULT
 
 
 class JsonResourceMap(dict):
@@ -92,8 +93,10 @@ class Database(object):
     def uriref(self, path='/', **query):
         return URIRef(self.url(path=path, **query).as_string())
 
-    def get(self, url, **query):
-        return self.cache.get(self.url(url, **query).as_string())
+    def get(self, url, default=NO_DEFAULT, **query):
+        _u = self.url(url, **query)
+        if _u:
+            return self.cache.get(self.url(url, **query).as_string(), default=default)
 
     def get_datatables(self, url):
         prefix = 'CLLD.DataTable.init('
