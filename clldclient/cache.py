@@ -71,7 +71,7 @@ class Response(object):
     @property
     def content(self):
         if 'json' in self.content_type:
-            return json.loads(self._content)
+            return json.loads(self._content.decode('utf8'))
         if 'rdf+xml' in self.content_type:
             return graph(self._content)
         return self._content  # pragma: no cover
