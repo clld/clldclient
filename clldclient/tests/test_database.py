@@ -3,18 +3,15 @@ from __future__ import unicode_literals
 from unittest import TestCase
 
 from mock import patch
+from rdflib.namespace import DCTERMS
 
-from clldclient.util import graph
 from clldclient.tests.util import MockCache
 
 
 class Cache(MockCache):
     __responses__ = {
-        'http://wals.info/void.rdf': graph("""\
-<rdf:RDF xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-         xmlns:void="http://rdfs.org/ns/void#"
-         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-         xmlns:dcterms="http://purl.org/dc/terms/">
+        'http://wals.info/': """\
+<rdf:RDF {0}>
     <void:Dataset rdf:about="http://wals.info/">
         <rdfs:label xml:lang="en">WALS Online</rdfs:label>
         <dcterms:title xml:lang="en">WALS Online</dcterms:title>
@@ -30,21 +27,38 @@ Leipzig: Max Planck Institute for Evolutionary Anthropology.
 (Available online at http://wals.info, Accessed on 2015-07-24.)
         </dcterms:bibliographicCitation>
     </void:Dataset>
-</rdf:RDF>"""),
-        'http://wals.info/chapter.rdf': graph("""\
-<rdf:RDF xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-    <skos:Collection rdf:about="http://wals.info/chapter">
+    <void:Dataset rdf:about="http://wals.info/feature">
+        <skos:prefLabel xml:lang="en">Features</skos:prefLabel>
+        <skos:hiddenLabel xml:lang="x-clld">parameter</skos:hiddenLabel>
+        <skos:example>http://wals.info/feature/{{id}}</skos:example>
+        <void:rootResource rdf:resource="http://wals.info/feature"/>
+    </void:Dataset>
+    <void:Dataset rdf:about="http://wals.info/languoid">
+        <skos:prefLabel xml:lang="en">Languages</skos:prefLabel>
+        <skos:hiddenLabel xml:lang="x-clld">language</skos:hiddenLabel>
+        <skos:example>http://wals.info/languoid/lect/wals_code_{{id}}</skos:example>
+        <void:rootResource rdf:resource="http://wals.info/languoid"/>
+    </void:Dataset>
+</rdf:RDF>""",
+        'http://wals.info/feature': """\
+<rdf:RDF {0}>
+    <skos:Collection rdf:about="http://wals.info/feature">
         <rdfs:label xml:lang="en">contributions</rdfs:label>
         <skos:prefLabel xml:lang="en">contributions</skos:prefLabel>
-        <skos:member rdf:resource="http://wals.info/chapter/13"/>
-        <skos:member rdf:resource="http://wals.info/chapter/1"/>
-        <skos:member rdf:resource="http://wals.info/chapter/2"/>
-        <skos:member rdf:resource="http://wals.info/chapter/3"/>
-        <skos:member rdf:resource="http://wals.info/chapter/4"/>
+        <skos:scopeNote xml:lang="x-clld">index</skos:scopeNote>
+        <skos:hiddenLabel xml:lang="x-clld">parameter</skos:hiddenLabel>
+        <skos:member rdf:resource="http://wals.info/feature/13"/>
+        <skos:member rdf:resource="http://wals.info/feature/1"/>
     </skos:Collection>
-</rdf:RDF>"""),
+</rdf:RDF>""",
+        'http://wals.info/feature/1': """\
+<rdf:RDF {0}>
+    <rdf:Description rdf:about="http://wals.info/feature">
+        <rdfs:label xml:lang="en">contributions</rdfs:label>
+        <skos:prefLabel xml:lang="en">contributions</skos:prefLabel>
+        <skos:scopeNote xml:lang="x-clld">parameter</skos:scopeNote>
+    </rdf:Description>
+</rdf:RDF>""",
 }
 
 
@@ -55,20 +69,19 @@ class Tests(TestCase):
         with patch('clldclient.database.Cache', Cache):
             client = Database('wals.info')
             self.assertEquals(client.url('/p').as_string(), 'http://wals.info/p')
-            self.assertEquals(client.url('/p', q='s').as_string(), 'http://wals.info/p?q=s')
             self.assertEquals(
-                client.url('https://example.org/p').as_string(),
-                'https://example.org/p')
-            assert client.license
-            assert client.citation
-            assert client.subsets()
-            self.assertEquals(len(client.subset('http://wals.info/chapter')), 5)
+                client.url('/p', q='s').as_string(), 'http://wals.info/p?q=s')
 
-    def test_JsonResourceMap(self):
-        from clldclient.database import JsonResourceMap
-
-        rm = JsonResourceMap(dict(
-            properties=dict(uri_template='http://example.org/{id}.json', dataset='ds'),
-            resources=[dict(id='abc')]))
-        self.assertEquals(rm.url('abc'), 'http://example.org/abc.json')
-        self.assertIsNone(rm.url('xyz'))
+            ds = client.dataset
+            assert ds.license
+            assert ds.citation
+            assert ds.name
+            assert repr(ds)
+            assert ds['http://purl.org/dc/terms/title']
+            self.assertRaises(KeyError, ds.__getitem__, 'abcd')
+            ds.get_text(list(ds.g.objects(ds.uriref, DCTERMS['title']))[0])
+            self.assertEquals(len(ds.resource_types), 2)
+            res = client.resources('parameter')
+            self.assertEquals(res.member_type, 'parameter')
+            self.assertEquals(len(res.members), 2)
+            client.resource('1', 'parameter')

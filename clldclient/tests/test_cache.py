@@ -13,11 +13,13 @@ from mock import patch, Mock
 
 @all_requests
 def clld(url, request):
-    content = {
+    res = {
         '/resource/languoid/id/stan1295.json': (
+            '<http://glottolog.org/>; rel="canonical"; type="text/html"',
             'application/json',
             {'id': 'stan1295', 'name': 'Standard German'}),
         '/resource/languoid/id/stan1295.rdf': (
+            '',
             'application/rdf+xml; charset=utf8',
             """\
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -28,9 +30,10 @@ def clld(url, request):
 </rdf:RDF>
 """),
     }.get(url.path)
-    if content is None:
+    if res is None:
         return response(404, 'not found', {}, None, 5, request)
-    return response(200, content[1], {'content-type': content[0]}, None, 5, request)
+    return response(
+        200, res[2], {'content-type': res[1], 'link': res[0]}, None, 5, request)
 
 
 class Tests(TestCase):
@@ -49,6 +52,7 @@ class Tests(TestCase):
                 cache = Cache()
                 r1 = cache.get('http://glottolog.org/resource/languoid/id/stan1295.json')
                 self.assertEquals(r1.content['id'], 'stan1295')
+                self.assertEquals(r1.canonical_url, 'http://glottolog.org/')
                 r2 = cache.get('http://glottolog.org/resource/languoid/id/stan1295.json')
                 self.assertEquals(r1.created, r2.created)
                 cache.drop()
@@ -58,6 +62,9 @@ class Tests(TestCase):
                 self.assertEquals(cache.get('http://glottolog.org/unknown', default=1), 1)
                 res = cache.get('http://glottolog.org/resource/languoid/id/stan1295.rdf')
                 self.assertEquals(res.mimetype, 'application/rdf+xml')
+                self.assertEquals(
+                    res.canonical_url,
+                    'http://glottolog.org/resource/languoid/id/stan1295.rdf')
                 assert hasattr(res.content, 'triples')
                 self.assertEquals(res.links, [])
                 cached = {r[0]: r[1] for r in cache.stats()}['glottolog.org']

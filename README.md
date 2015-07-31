@@ -56,7 +56,7 @@ u'http://apics-online.info/languages/1301'
 
 ### Bespoke database access
 
-Currently, access to [Glottolog](http://glottolog.org) data about languoids is implemented:
+#### [Glottolog](http://glottolog.org)
 
 ```python
 >>> from clldclient.glottolog import Glottolog
@@ -74,6 +74,22 @@ u'Indo-European'
 100  # by default only the first 100 refs are retrieved.
 >>> refs[0]['name']
 u'Michels, Stefan 1992'
+```
+
+#### [WALS](http://wals.info)
+
+```python
+>>> from clldclient.wals import WALS
+>>> wals = WALS()
+>>> l = wals.language('deu')
+>>> l
+<Language "Deuri">
+>>> l.genus
+<Genus "Bodo-Garo">
+>>> l.genus.family
+<Family "Sino-Tibetan">
+>>> l.genus.languages
+[<Language "Bodo">, <Language "Kachari">, <Language "Deuri">, <Language "Garo">, <Language "Kokborok">, <Language "Dimasa">]
 ```
 
 Additions for other databases are welcome!

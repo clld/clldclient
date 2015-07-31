@@ -65,7 +65,7 @@ def get_links(instr):
         for link in [h.strip() for h in link_splitter.findall(instr)]:
             url, params = link.split(">", 1)
             url = URL(url[1:])
-            fname = url.path_segments()[-1]
+            fname = url.path_segments()[-1] if url.path_segments() else ''
             info = {
                 'url': url.as_string(),
                 'ext': fname.split('.', 1)[1] if '.' in fname else None,

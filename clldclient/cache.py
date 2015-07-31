@@ -31,7 +31,8 @@ responses = Table(
     Column('pk', Integer, primary_key=True),
     Column('created', DateTime, default=datetime.datetime.utcnow),
     Column('host', String),
-    Column('url', String),
+    Column('request_url', String),  # the initially requested URL
+    Column('url', String),  # the returned URL, potentially after following redirects
     Column('headers', String),
     Column('content', Binary),
 )
@@ -40,12 +41,20 @@ responses = Table(
 class Response(object):
     """Data of a response for an HTTP request to clld app.
     """
-    def __init__(self, created, host, url, headers, content):
+    def __init__(self, created, host, request_url, url, headers, content):
         self.created = created
+        self.request_url = request_url
         self.url = url
         self.host = host
         self._content = content
         self.headers = json.loads(headers)
+
+    @property
+    def canonical_url(self):
+        for link in self.links:
+            if link['rel'] == 'canonical':
+                return link['url']
+        return self.url
 
     @property
     def content_type(self):
@@ -89,7 +98,7 @@ class Cache(object):
             log.info('db created at %s' % self.path)
         return db
 
-    def get(self, url, default=NO_DEFAULT):
+    def get(self, url, default=NO_DEFAULT, headers={}):
         """Retrieve a Response object for a given URL.
         """
         url = URL(url)
@@ -97,13 +106,14 @@ class Cache(object):
             select([
                 responses.c.created,
                 responses.c.host,
+                responses.c.request_url,
                 responses.c.url,
                 responses.c.headers,
                 responses.c.content])
-            .where(responses.c.url == url.as_string())).fetchone()
+            .where(responses.c.request_url == url.as_string())).fetchone()
         if not row:
             log.info('cache miss %s' % url)
-            row = self.add(url)
+            row = self.add(url, headers)
             if row is None:
                 if default is NO_DEFAULT:
                     raise KeyError(url)
@@ -113,13 +123,14 @@ class Cache(object):
             log.info('cache hit %s' % url)
         return Response(*row)
 
-    def add(self, url):
-        response = requests.get(url.as_string())
+    def add(self, url, headers):
+        response = requests.get(url.as_string(), headers=headers)
         if response.status_code == requests.codes.ok:
             values = OrderedDict()
             values['created'] = datetime.datetime.utcnow()
             values['host'] = url.host()
-            values['url'] = url.as_string()
+            values['request_url'] = url.as_string()
+            values['url'] = response.url
             values['headers'] = json.dumps(dict(response.headers.items()))
             values['content'] = response.content
             self.db.execute(responses.insert().values(**values))
