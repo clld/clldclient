@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 import re
 
-from rdflib import URIRef
+from rdflib import URIRef, Literal
 
 from clldclient.database import Database, Language
 
@@ -28,6 +28,10 @@ class Languoid(Language):
     def children(self):
         for child in self['skos:narrower']:
             yield self.client.resource(child)
+
+    @property
+    def macroareas(self):
+        return [l.value for l in self['dcterms:spatial'] if isinstance(l, Literal)]
 
 
 class Glottolog(Database):

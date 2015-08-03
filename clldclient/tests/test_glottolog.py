@@ -106,3 +106,4 @@ class Tests(TestCase):
             self.assertEquals(deu.family.name, 'Indo-European')
             self.assertEquals(deu.parent.name, 'Indo-European')
             self.assertEquals(len(list(deu.children)), 1)
+            self.assertEquals(deu.macroareas, ['Eurasia'])
