@@ -21,7 +21,7 @@ from purl import URL
 
 import clldclient
 from clldclient.link_header import get_links
-from clldclient.util import graph, NO_DEFAULT
+from clldclient.util import graph, NO_DEFAULT, b
 
 
 metadata = MetaData()
@@ -110,7 +110,7 @@ class Cache(object):
                 responses.c.url,
                 responses.c.headers,
                 responses.c.content])
-            .where(responses.c.request_url == url.as_string())).fetchone()
+            .where(responses.c.request_url == url.as_string().encode('utf8'))).fetchone()
         if not row:
             log.info('cache miss %s' % url)
             row = self.add(url, headers)
@@ -128,9 +128,9 @@ class Cache(object):
         if response.status_code == requests.codes.ok:
             values = OrderedDict()
             values['created'] = datetime.datetime.utcnow()
-            values['host'] = url.host()
-            values['request_url'] = url.as_string()
-            values['url'] = response.url
+            values['host'] = url.host().encode('utf8')
+            values['request_url'] = url.as_string().encode('utf8')
+            values['url'] = response.url.encode('utf8')
             values['headers'] = json.dumps(dict(response.headers.items()))
             values['content'] = response.content
             self.db.execute(responses.insert().values(**values))
@@ -156,7 +156,7 @@ class Cache(object):
     def purge(self, host=None, before=None, after=None):
         sql = responses.delete()
         if host:
-            sql = sql.where(responses.c.host == host)
+            sql = sql.where(responses.c.host == b(host))
         if before:
             sql = sql.where(responses.c.created < before)
         if after:

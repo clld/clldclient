@@ -4,14 +4,13 @@ import re
 
 from rdflib import URIRef
 
-from clldclient.database import Database, RdfResource
+from clldclient.database import Database, Language
 
 
 ISO_CODE_PATTERN = re.compile('[a-z]{3}$')
-GLOTTOCODE_PATTERN = re.compile('[a-z]{4}[0-9]{4}$')
 
 
-class Languoid(RdfResource):
+class Languoid(Language):
     def _get_first_resource(self, property_):
         urirefs = self[property_]
         if urirefs:
@@ -24,6 +23,11 @@ class Languoid(RdfResource):
     @property
     def family(self):
         return self._get_first_resource('skos:broaderTransitive')
+
+    @property
+    def children(self):
+        for child in self['skos:narrower']:
+            yield self.client.resource(child)
 
 
 class Glottolog(Database):

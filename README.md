@@ -25,71 +25,63 @@ You can access any clld database as follows:
 ```python
 >>> from clldclient.database import Database
 >>> apics = Database('apics-online.info')
->>> print(apics.citation)
+>>> print(apics.dataset.citation)
 
 Michaelis, Susanne Maria & Maurer, Philippe & Haspelmath, Martin & Huber, Magnus (eds.) 2013.
 Atlas of Pidgin and Creole Language Structures Online.
 Leipzig: Max Planck Institute for Evolutionary Anthropology.
 (Available online at http://apics-online.info, Accessed on 2015-07-24.)
 
->>> langs = apics.resourcemap('language')
->>> len(langs)
+>>> assert 'language' in apics.dataset.resource_types
+>>> languages = apics.resources('language')
+>>> len(languages)
 104
->>> list(langs.keys())[0]
-u'1301'
->>> langs.url(list(langs.keys())[0])
-u'http://apics-online.info/languages/1301'
->>> from pprint import pprint
->>> pprint(apics.resource('language', '1', ext='json').content)
-{u'description': None,
- u'id': u'1',
- u'jsondata': {},
- u'language_pk': None,
- u'latitude': 5.833333,
- u'lexifier': u'English',
- u'longitude': -55.6,
- u'markup_description': None,
- u'name': u'Early Sranan',
- u'pk': 1,
- u'region': u'Caribbean'}
+>>> for lang in languages:
+...     print(lang)
+...     break
+...     
+<Resource type="language" name="Tayo">
 ```
 
 ### Bespoke database access
 
 #### [Glottolog](http://glottolog.org)
 
+The `Glottolog` client provides convenient access to the language classification:
+
 ```python
 >>> from clldclient.glottolog import Glottolog
->>> gl = Glottolog()
->>> deu = gl.languoid('deu')
->>> deu.name
-u'Standard German'
->>> deu.id
-u'stan1295'
->>> ie = deu.get_family(gl)
->>> ie.name
-u'Indo-European'
->>> refs = list(deu.get_refs(gl))
->>> len(refs)
-100  # by default only the first 100 refs are retrieved.
->>> refs[0]['name']
-u'Michels, Stefan 1992'
+>>> glottolog = Glottolog()
+>>> deu = glottolog.languoid('deu')
+>>> deu2 = glottolog.languoid('stan1295')
+>>> deu2 == deu
+True
+>>> deu.family
+<Languoid type="language" name="Indo-European">
+>>> for child in deu.family.children:
+...     print(child)
+...     break
+...     
+<Languoid type="language" name="Messapic">
 ```
 
 #### [WALS](http://wals.info)
+
+The `WALS` client provides access to the 
+[WALS genealogy](http://wals.info/languoid/genealogy):
 
 ```python
 >>> from clldclient.wals import WALS
 >>> wals = WALS()
 >>> l = wals.language('deu')
 >>> l
-<Language "Deuri">
+<Language type="language" name="Deuri">
 >>> l.genus
-<Genus "Bodo-Garo">
+<Genus type="genus" name="Bodo-Garo">
 >>> l.genus.family
-<Family "Sino-Tibetan">
->>> l.genus.languages
-[<Language "Bodo">, <Language "Kachari">, <Language "Deuri">, <Language "Garo">, <Language "Kokborok">, <Language "Dimasa">]
+<Family type="family" name="Sino-Tibetan">
+>>> l.genus.languages[0]
+<Language type="language" name="Garo">
 ```
 
 Additions for other databases are welcome!

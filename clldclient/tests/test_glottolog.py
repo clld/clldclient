@@ -30,13 +30,25 @@ class Cache(MockCache):
     <dcterms:isReferencedBy rdf:resource="http://glottolog.org/valuesets/fc37168"/>
     <dcterms:spatial>Eurasia</dcterms:spatial>
     <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/berl1235"/>
-    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/hann1239"/>
     <dcterms:spatial rdf:resource="http://www.geonames.org/countries/DE/"/>
     <skos:editorialNote>established</skos:editorialNote>
-    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/mans1257"/>
     <skos:broaderTransitive rdf:resource="http://glottolog.org/resource/languoid/id/indo1319"/>
     <rdf:type rdf:resource="http://purl.org/linguistics/gold/Language"/>
     <skos:broader rdf:resource="http://glottolog.org/resource/languoid/id/indo1319"/>
+  </rdf:Description>
+</rdf:RDF>""",
+        'http://glottolog.org/resource/languoid/id/berl1235': """\
+<rdf:RDF {0}>
+  <rdf:Description rdf:about="http://glottolog.org/resource/languoid/id/stan1295">
+    <void:inDataset rdf:resource="http://glottolog.org/"/>
+    <rdfs:label xml:lang="en">...</rdfs:label>
+    <skos:prefLabel xml:lang="en">...</skos:prefLabel>
+    <skos:scopeNote xml:lang="x-clld">language</skos:scopeNote>
+    <dcterms:title xml:lang="en">...</dcterms:title>
+    <rdf:type rdf:resource="http://purl.org/dc/terms/LinguisticSystem"/>
+    <skos:broaderTransitive rdf:resource="http://glottolog.org/resource/languoid/id/indo1319"/>
+    <rdf:type rdf:resource="http://purl.org/linguistics/gold/Language"/>
+    <skos:broader rdf:resource="http://glottolog.org/resource/languoid/id/stan1295"/>
   </rdf:Description>
 </rdf:RDF>""",
         'http://glottolog.org/resource/languoid/id/indo1319': """
@@ -89,5 +101,8 @@ class Tests(TestCase):
             gl = Glottolog()
             gl.languoid('deu')
             deu = gl.languoid('http://glottolog.org/resource/languoid/id/stan1295')
+            self.assertAlmostEquals(deu.longitude, 12.4676)
+            assert deu.latitude
             self.assertEquals(deu.family.name, 'Indo-European')
             self.assertEquals(deu.parent.name, 'Indo-European')
+            self.assertEquals(len(list(deu.children)), 1)

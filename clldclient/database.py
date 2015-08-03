@@ -6,10 +6,11 @@ A database in this context means linguistic data published via a clld applicatio
 """
 from __future__ import unicode_literals
 import json
+import re
 from collections import namedtuple
 
 from rdflib import URIRef, Literal
-from rdflib.namespace import VOID, SKOS, DCTERMS, RDFS, RDF
+from rdflib.namespace import VOID, SKOS, DCTERMS, RDFS, RDF, OWL, Namespace
 from purl import URL
 from uritemplate import expand
 from six import string_types
@@ -17,7 +18,19 @@ from six import string_types
 from clldclient.cache import Cache
 
 
-NAMESPACES = dict(dcterms=DCTERMS, skos=SKOS, rdf=RDF, rdfs=RDFS, void=VOID)
+GLOTTOLOG_LANGUOID_URI = re.compile(
+    'http://glottolog.org/resource/languoid/id/(?P<glottocode>[a-z]{4}[0-9]{4})$')
+
+NAMESPACES = dict(
+    dcterms=DCTERMS,
+    skos=SKOS,
+    rdf=RDF,
+    rdfs=RDFS,
+    void=VOID,
+    owl=OWL,
+    lexvo=Namespace("http://lexvo.org/ontology#"),
+    geo=Namespace("http://www.w3.org/2003/01/geo/wgs84_pos#"),
+)
 
 
 class RdfResource(object):
@@ -36,6 +49,11 @@ class RdfResource(object):
         return '<%s type="%s" name="%s">' % (
             self.__class__.__name__, self.type, self.name)
 
+    def __eq__(self, other):
+        if isinstance(other, RdfResource):
+            return self.uriref == other.uriref
+        return False
+
     def __getitem__(self, item):
         if item.startswith('http:') or item.startswith('https:'):
             predicate = URIRef(item)
@@ -45,6 +63,11 @@ class RdfResource(object):
         else:
             raise KeyError('%s' % item)
         return list(self.g.objects(self.uriref, predicate))
+
+    def _get_first(self, item, attr=None):
+        res = self[item]
+        if res:
+            return getattr(res[0], attr) if attr else res[0]
 
     def get_text(self, literals, language=None):
         if isinstance(literals, Literal):
@@ -64,6 +87,40 @@ class Index(RdfResource):
     @property
     def members(self):
         return self['skos:member']
+
+    def __len__(self):
+        return len(self.members)
+
+    def __iter__(self):
+        for member in self.members:
+            yield self.client.resource(member)
+
+
+class Resource(RdfResource):
+    @property
+    def id(self):
+        return self.get_text('skos:altLabel', language='x-clld')
+
+
+class Language(Resource):
+    @property
+    def latitude(self):
+        return self._get_first('geo:lat', attr='value')
+
+    @property
+    def longitude(self):
+        return self._get_first('geo:long', attr='value')
+
+    @property
+    def iso_code(self):
+        return self._get_first('lexvo:iso639P3PCode', attr='value')
+
+    @property
+    def glottocode(self):
+        for uriref in self['owl:sameAs']:
+            match = GLOTTOLOG_LANGUOID_URI.match(uriref)
+            if match:
+                return match.group('glottocode')
 
 
 class Dataset(RdfResource):
@@ -104,7 +161,7 @@ class Database(object):
 
     >>> wals = Database('wals.info')
     """
-    __resource_map__ = {'index': Index}
+    __resource_map__ = {'index': Index, 'language': Language}
 
     def __init__(self, host):
         self.host = host
@@ -126,7 +183,7 @@ class Database(object):
             id = URIRef(expand(resource_type.uritemplate, dict(id=id)))
         res = self.get(id)
         rtype = get_resource_type(res.content, URIRef(res.canonical_url))
-        cls = self.__resource_map__.get(rtype, RdfResource)
+        cls = self.__resource_map__.get(rtype, Resource)
         return cls(res, self, rtype)
 
     def resources(self, type):
