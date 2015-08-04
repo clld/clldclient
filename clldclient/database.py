@@ -5,17 +5,17 @@ Functionality to access linguistic databases.
 A database in this context means linguistic data published via a clld application.
 """
 from __future__ import unicode_literals
-import json
 import re
 from collections import namedtuple
 
 from rdflib import URIRef, Literal
-from rdflib.namespace import VOID, SKOS, DCTERMS, RDFS, RDF, OWL, Namespace
+from rdflib.namespace import VOID, SKOS, DCTERMS, RDFS, RDF, OWL, XSD, Namespace
 from purl import URL
 from uritemplate import expand
 from six import string_types
 
 from clldclient.cache import Cache
+from clldclient.table import Table
 
 
 GLOTTOLOG_LANGUOID_URI = re.compile(
@@ -31,6 +31,14 @@ NAMESPACES = dict(
     lexvo=Namespace("http://lexvo.org/ontology#"),
     geo=Namespace("http://www.w3.org/2003/01/geo/wgs84_pos#"),
 )
+
+
+def get_first(iterable, filter_=None, attr=None):
+    """helper to make dealing with generators as returned by `subjects` or `objects` easy.
+    """
+    for item in iterable:
+        if filter_ is None or filter_(item):
+            return getattr(item, attr) if attr else item
 
 
 class RdfResource(object):
@@ -65,9 +73,7 @@ class RdfResource(object):
         return list(self.g.objects(self.uriref, predicate))
 
     def _get_first(self, item, attr=None):
-        res = self[item]
-        if res:
-            return getattr(res[0], attr) if attr else res[0]
+        return get_first(self[item], attr=attr)
 
     def get_text(self, literals, language=None):
         if isinstance(literals, Literal):
@@ -123,6 +129,29 @@ class Language(Resource):
                 return match.group('glottocode')
 
 
+DomainElement = namedtuple('DomainElement', 'uriref name description number')
+
+
+class Parameter(Resource):
+    @property
+    def domain(self):
+        res = []
+        for subject in self.g.subjects(SKOS['broader'], self.uriref):
+            res.append(DomainElement(
+                subject,
+                get_first(self.g.objects(subject, DCTERMS['title']), attr='value'),
+                get_first(
+                    self.g.objects(subject, DCTERMS['description']),
+                    filter_=lambda l: l.language == 'en',
+                    attr='value'),
+                get_first(
+                    self.g.objects(subject, DCTERMS['description']),
+                    filter_=lambda l: l.datatype == XSD.int,
+                    attr='value'),
+            ))
+        return sorted(res, key=lambda de: de.number)
+
+
 class Dataset(RdfResource):
     @property
     def citation(self):
@@ -161,7 +190,11 @@ class Database(object):
 
     >>> wals = Database('wals.info')
     """
-    __resource_map__ = {'index': Index, 'language': Language}
+    __resource_map__ = {
+        'index': Index,
+        'language': Language,
+        'parameter': Parameter,
+    }
 
     def __init__(self, host):
         self.host = host
@@ -212,29 +245,10 @@ class Database(object):
                 default=None,
                 headers={'Accept': 'application/rdf+xml'})
 
-    #
-    # FIXME: get list of resources and uri templates from void!
-    #
-    def get_datatables(self, url):  # pragma: no cover
-        prefix = 'CLLD.DataTable.init('
-        html = self.get(url).content.decode('utf8')
-        for line in html.split('\n'):
-            line = line.strip()
-            if line.startswith(prefix):
-                yield DataTable(json.loads('[%s]' % line[len(prefix):-2]))
+    def table(self, rsc, strip_html=True, **constraints):  # pragma: no cover
+        return Table(rsc, self, strip_html=strip_html, **constraints)
 
     def formats(self, url):  # pragma: no cover
         for link in self.get(url).links:
             if link['rel'] == 'alternate':
                 yield link
-
-
-class DataTable(object):  # pragma: no cover
-    def __init__(self, info):
-        self.name = info[0]
-        self.options = info[-1]
-        self.base_url = URL(self.options['sAjaxSource'])
-        self.cols = self.options['aoColumns']
-
-    def url(self, sort=None, **kw):
-        return

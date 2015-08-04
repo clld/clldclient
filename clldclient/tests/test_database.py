@@ -59,6 +59,24 @@ Leipzig: Max Planck Institute for Evolutionary Anthropology.
         <skos:altLabel xml:lang="x-clld">1</skos:altLabel>
         <skos:scopeNote xml:lang="x-clld">parameter</skos:scopeNote>
     </rdf:Description>
+    <rdf:Description rdf:about="http://wals.info/feature/1A#DE-1A-1">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <rdfs:label xml:lang="en">Small</rdfs:label>
+        <skos:prefLabel xml:lang="en">Small</skos:prefLabel>
+        <dcterms:title xml:lang="en">Small</dcterms:title>
+        <dcterms:description xml:lang="en">Small</dcterms:description>
+        <skos:broader rdf:resource="http://wals.info/feature/1"/>
+        <dcterms:description rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</dcterms:description>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://wals.info/feature/1A#DE-1A-2">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <rdfs:label xml:lang="en">Moderately small</rdfs:label>
+        <skos:prefLabel xml:lang="en">Moderately small</skos:prefLabel>
+        <dcterms:title xml:lang="en">Moderately small</dcterms:title>
+        <dcterms:description xml:lang="en">Moderately small</dcterms:description>
+        <skos:broader rdf:resource="http://wals.info/feature/1"/>
+        <dcterms:description rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2</dcterms:description>
+    </rdf:Description>
 </rdf:RDF>""",
         'http://wals.info/feature/13': """\
 <rdf:RDF {0}>
@@ -119,6 +137,7 @@ class Tests(TestCase):
             for param in res:
                 self.assertEquals(param.type, 'parameter')
             param = client.resource('1', 'parameter')
+            self.assertEquals(len(param.domain), 2)
             self.assertEquals(param.id, '1')
             param2 = client.resource('1', 'parameter')
             self.assertEquals(param, param2)

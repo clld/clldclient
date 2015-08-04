@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 
 from appdirs import user_cache_dir
 from sqlalchemy import (
-    Table, Column, Integer, DateTime, String, Binary, create_engine, MetaData, desc,
+    Table, Column, Integer, DateTime, String, Binary, create_engine, MetaData, desc, and_,
 )
 from sqlalchemy.sql import select, functions
 import requests
@@ -32,6 +32,7 @@ responses = Table(
     Column('created', DateTime, default=datetime.datetime.utcnow),
     Column('host', String),
     Column('request_url', String),  # the initially requested URL
+    Column('accept', String),
     Column('url', String),  # the returned URL, potentially after following redirects
     Column('headers', String),
     Column('content', Binary),
@@ -41,9 +42,10 @@ responses = Table(
 class Response(object):
     """Data of a response for an HTTP request to clld app.
     """
-    def __init__(self, created, host, request_url, url, headers, content):
+    def __init__(self, created, host, request_url, accept, url, headers, content):
         self.created = created
         self.request_url = request_url
+        self.accept = accept
         self.url = url
         self.host = host
         self._content = content
@@ -98,19 +100,24 @@ class Cache(object):
             log.info('db created at %s' % self.path)
         return db
 
-    def get(self, url, default=NO_DEFAULT, headers={}):
+    def get(self, url, default=NO_DEFAULT, headers=None):
         """Retrieve a Response object for a given URL.
         """
+        headers = headers or {}
         url = URL(url)
         row = self.db.execute(
             select([
                 responses.c.created,
                 responses.c.host,
                 responses.c.request_url,
+                responses.c.accept,
                 responses.c.url,
                 responses.c.headers,
                 responses.c.content])
-            .where(responses.c.request_url == url.as_string().encode('utf8'))).fetchone()
+            .where(and_(
+                responses.c.request_url == url.as_string().encode('utf8'),
+                responses.c.accept == b(headers.get('Accept', ''))))
+        ).fetchone()
         if not row:
             log.info('cache miss %s' % url)
             row = self.add(url, headers)
@@ -130,6 +137,7 @@ class Cache(object):
             values['created'] = datetime.datetime.utcnow()
             values['host'] = url.host().encode('utf8')
             values['request_url'] = url.as_string().encode('utf8')
+            values['accept'] = b(headers.get('Accept', ''))
             values['url'] = response.url.encode('utf8')
             values['headers'] = json.dumps(dict(response.headers.items()))
             values['content'] = response.content

@@ -5,17 +5,18 @@ from setuptools import setup, find_packages
 requires = [
     'sqlalchemy',
     'six',
-    #'docopt',
+    'beautifulsoup4>=4.4.0',
     'requests',
     'AppDirs',
     'purl',
     'rdflib',
     'uritemplate',
+    'html5lib',
 ]
 
 setup(
     name='clldclient',
-    version="1.0.1",
+    version="1.1.0",
     description='A python wrapper for the API exposed by clld apps',
     author='Robert Forkel',
     author_email='xrotwang@googlemail.com',
@@ -38,4 +39,7 @@ setup(
     ],
     packages=find_packages(),
     tests_require=['nose', 'coverage', 'mock', 'httmock'],
-)
+    entry_points="""\
+        [console_scripts]
+        clld-download-table = clldclient.cli:download_table
+    """)
