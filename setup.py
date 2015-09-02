@@ -16,7 +16,7 @@ requires = [
 
 setup(
     name='clldclient',
-    version="1.1.0",
+    version="1.2.0",
     description='A python wrapper for the API exposed by clld apps',
     author='Robert Forkel',
     author_email='xrotwang@googlemail.com',
