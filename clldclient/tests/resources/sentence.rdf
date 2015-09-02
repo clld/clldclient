@@ -1,0 +1,38 @@
+<rdf:RDF xmlns:foaf="http://xmlns.com/foaf/0.1/"
+xmlns:owl="http://www.w3.org/2002/07/owl#"
+xmlns:bibo="http://purl.org/ontology/bibo/"
+xmlns:gold="http://purl.org/linguistics/gold/"
+xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+xmlns:void="http://rdfs.org/ns/void#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:isbd="http://iflastandards.info/ns/isbd/elements/"
+xmlns:frbr="http://purl.org/vocab/frbr/core#"
+xmlns:dctype="http://purl.org/dc/dcmitype/"
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+xmlns:dcterms="http://purl.org/dc/terms/"
+xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#"
+xmlns:lexvo="http://lexvo.org/ontology#">
+    <rdf:Description rdf:about="http://localhost:6543/sentences/sentence">
+        <void:inDataset rdf:resource="http://localhost:6543/"/>
+        <rdfs:label xml:lang="en">Sentenceä</rdfs:label>
+        <skos:prefLabel xml:lang="en">Sentenceä</skos:prefLabel>
+            <skos:scopeNote xml:lang="x-clld">sentence</skos:scopeNote>
+        <skos:altLabel xml:lang="x-clld">sentence</skos:altLabel>
+        <dcterms:title xml:lang="en">Sentenceä</dcterms:title>
+        <dcterms:description xml:lang="en">sentence description</dcterms:description>
+        
+    <dcterms:language rdf:resource="http://localhost:6543/languages/language"/>
+    <dcterms:description xml:lang="x-clld-IGT-analyzed">a	morpheme	does	do</dcterms:description>
+    <dcterms:description xml:lang="x-clld-IGT-gloss">a	morpheme	1SG	do.SG2</dcterms:description>
+    <dcterms:description xml:lang="x-clld-IGT-original-script">a morpheme</dcterms:description>
+    <dcterms:type></dcterms:type>
+    <dcterms:source>own</dcterms:source>
+    <skos:note>comment</skos:note>
+        <dcterms:references rdf:resource="http://localhost:6543/sources/source"/>
+
+    </rdf:Description>
+    
+</rdf:RDF>

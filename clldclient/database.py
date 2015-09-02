@@ -12,7 +12,7 @@ from rdflib import URIRef, Literal
 from rdflib.namespace import VOID, SKOS, DCTERMS, RDFS, RDF, OWL, XSD, Namespace
 from purl import URL
 from uritemplate import expand
-from six import string_types
+from six import string_types, text_type
 
 from clldclient.cache import Cache
 from clldclient.table import Table
@@ -54,8 +54,8 @@ class RdfResource(object):
         return self.get_text('rdfs:label')
 
     def __repr__(self):
-        return '<%s type="%s" name="%s">' % (
-            self.__class__.__name__, self.type, self.name)
+        return text_type('<{0} type="{1}" name="{2}">'.format(
+            self.__class__.__name__, self.type, self.name).encode('ascii', 'replace'))
 
     def __eq__(self, other):
         if isinstance(other, RdfResource):
@@ -83,6 +83,11 @@ class RdfResource(object):
         for literal in literals:
             if language is None or language == literal.language:
                 return '%s' % literal
+
+    def _get_first_resource(self, property_):
+        urirefs = self[property_]
+        if urirefs:
+            return self.client.resource(urirefs[0])
 
 
 class Index(RdfResource):
@@ -149,7 +154,7 @@ class Parameter(Resource):
                     filter_=lambda l: l.datatype == XSD.int,
                     attr='value'),
             ))
-        return sorted(res, key=lambda de: de.number)
+        return sorted(res, key=lambda de: de.number if de.number is not None else 0)
 
 
 class Dataset(RdfResource):
@@ -230,9 +235,6 @@ class Database(object):
             url = url.host(self.host)
         if not url.scheme():
             url = url.scheme('http')
-        #if url.path_segment(-1):
-        #    if ext and '.' not in url.path_segment(-1):
-        #        url = url.path_segment(-1, '{0}.{1}'.format(url.path_segment(-1), ext))
         for k, v in query.items():
             url = url.query_param(k, v)
         return url
@@ -248,7 +250,9 @@ class Database(object):
     def table(self, rsc, strip_html=True, **constraints):  # pragma: no cover
         return Table(rsc, self, strip_html=strip_html, **constraints)
 
-    def formats(self, url):  # pragma: no cover
+    def formats(self, url):
+        if isinstance(url, RdfResource):
+            url = url.uriref
         for link in self.get(url).links:
             if link['rel'] == 'alternate':
                 yield link

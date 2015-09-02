@@ -1,0 +1,94 @@
+<rdf:RDF xmlns:foaf="http://xmlns.com/foaf/0.1/"
+xmlns:owl="http://www.w3.org/2002/07/owl#"
+xmlns:bibo="http://purl.org/ontology/bibo/"
+xmlns:gold="http://purl.org/linguistics/gold/"
+xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+xmlns:void="http://rdfs.org/ns/void#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:isbd="http://iflastandards.info/ns/isbd/elements/"
+xmlns:frbr="http://purl.org/vocab/frbr/core#"
+xmlns:dctype="http://purl.org/dc/dcmitype/"
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+xmlns:dcterms="http://purl.org/dc/terms/"
+xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#"
+xmlns:lexvo="http://lexvo.org/ontology#">
+    <rdf:Description rdf:about="http://glottolog.org/resource/languoid/id/indo1319">
+        <void:inDataset rdf:resource="http://glottolog.org/"/>
+        <rdfs:label xml:lang="en">Indo-European</rdfs:label>
+        <skos:prefLabel xml:lang="en">Indo-European</skos:prefLabel>
+            <skos:scopeNote xml:lang="x-clld">language</skos:scopeNote>
+        <skos:altLabel xml:lang="x-clld">indo1319</skos:altLabel>
+        <dcterms:title xml:lang="en">Indo-European</dcterms:title>
+        
+    <rdf:type rdf:resource="http://purl.org/dc/terms/LinguisticSystem"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/8922"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/17190"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/20794"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/21087"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/31905"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/43312"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/43803"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/49627"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/53608"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/56843"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/65721"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/68398"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/71266"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/80008"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/84709"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/95615"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/98090"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/111678"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/119445"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/119634"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/128755"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/131819"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/135083"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/136399"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/136973"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/142346"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/144380"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/157149"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/162119"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/163463"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/183696"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/183697"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/183698"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/183699"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/183700"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/183848"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/183849"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/183850"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/183851"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/resource/reference/id/183852"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/valuesets/sc104971"/>
+    <dcterms:isReferencedBy rdf:resource="http://glottolog.org/valuesets/fc104971"/>
+
+            <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/celt1248"/>
+    <rdf:type rdf:resource="http://purl.org/linguistics/gold/LanguageFamily"/>
+    <dcterms:spatial>South America</dcterms:spatial>
+    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/anat1257"/>
+    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/balt1263"/>
+    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/lusi1235"/>
+    <dcterms:spatial>Eurasia</dcterms:spatial>
+    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/alba1267"/>
+    <dcterms:spatial>North America</dcterms:spatial>
+    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/daci1234"/>
+    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/grae1234"/>
+    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/ital1284"/>
+    <skos:editorialNote>established</skos:editorialNote>
+    <dcterms:spatial>Papunesia</dcterms:spatial>
+    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/germ1287"/>
+    <dcterms:spatial>Australia</dcterms:spatial>
+    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/arme1241"/>
+    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/indo1320"/>
+    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/mess1244"/>
+    <dcterms:spatial>Africa</dcterms:spatial>
+    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/tokh1241"/>
+    <skos:narrower rdf:resource="http://glottolog.org/resource/languoid/id/thra1250"/>
+    </rdf:Description>
+    
+</rdf:RDF>

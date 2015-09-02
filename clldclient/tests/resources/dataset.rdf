@@ -1,0 +1,84 @@
+<rdf:RDF  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+xmlns:owl="http://www.w3.org/2002/07/owl#"
+xmlns:bibo="http://purl.org/ontology/bibo/"
+xmlns:gold="http://purl.org/linguistics/gold/"
+xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+xmlns:void="http://rdfs.org/ns/void#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:isbd="http://iflastandards.info/ns/isbd/elements/"
+xmlns:frbr="http://purl.org/vocab/frbr/core#"
+xmlns:dctype="http://purl.org/dc/dcmitype/"
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+xmlns:dcterms="http://purl.org/dc/terms/"
+xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#"
+xmlns:lexvo="http://lexvo.org/ontology#">
+    
+    
+    
+    
+    
+    <void:Dataset rdf:about="http://localhost:6543/">
+        <rdfs:label xml:lang="en">Datasetä</rdfs:label>
+        <skos:prefLabel xml:lang="en">Datasetä</skos:prefLabel>
+        <dcterms:title xml:lang="en">Datasetä</dcterms:title>
+        <dcterms:description xml:lang="en">Datasetü</dcterms:description>
+        <skos:scopeNote xml:lang="x-clld">dataset</skos:scopeNote>
+        <skos:altLabel xml:lang="x-clld">dataset</skos:altLabel>
+        <foaf:homepage>http://localhost:6543/</foaf:homepage>
+        <dcterms:license rdf:resource="http://creativecommons.org/licenses/by/3.0/"/>
+        <dcterms:rightsHolder rdf:resource="None"/>
+        <dcterms:publisher rdf:resource="None"/>
+        <void:feature rdf:resource="http://www.w3.org/ns/formats/RDF_XML"/>
+        <void:feature rdf:resource="http://www.w3.org/ns/formats/Turtle"/>
+        <void:feature rdf:resource="http://www.w3.org/ns/formats/N3"/>
+        <void:feature rdf:resource="http://www.w3.org/ns/formats/N-Triples"/>
+        <void:subset rdf:resource="http://localhost:6543/parameters"/>
+        <void:subset rdf:resource="http://localhost:6543/languages"/>
+        <dcterms:contributor rdf:parseType="Resource">
+            <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+            <foaf:name>A Name</foaf:name>
+        </dcterms:contributor>
+        <dcterms:bibliographicCitation>
+Name, A (eds.) 2015.
+Datasetü.
+None: None.
+(Available online at http://clld, Accessed on 2015-08-06.)
+
+        </dcterms:bibliographicCitation>
+        <dcterms:subject rdf:resource="http://dbpedia.org/resource/Linguistics"/>
+    </void:Dataset>
+    
+    
+    <void:Dataset rdf:about="http://localhost:6543/parameters">
+        <skos:prefLabel xml:lang="en">Parameters</skos:prefLabel>
+        <skos:hiddenLabel xml:lang="x-clld">parameter</skos:hiddenLabel>
+        <skos:example>http://localhost:6543/parameters/{id}</skos:example>
+        <void:rootResource rdf:resource="http://localhost:6543/parameters"/>
+    </void:Dataset>
+    
+    <void:Dataset rdf:about="http://localhost:6543/languages">
+        <skos:prefLabel xml:lang="en">Languages</skos:prefLabel>
+        <skos:hiddenLabel xml:lang="x-clld">language</skos:hiddenLabel>
+        <skos:example>http://localhost:6543/languages/{id}</skos:example>
+        <void:rootResource rdf:resource="http://localhost:6543/languages"/>
+    </void:Dataset>
+    
+    
+    
+    
+    
+    
+    
+    
+    <foaf:Organization rdf:about="None">
+        <skos:prefLabel xml:lang="en">None</skos:prefLabel>
+        <foaf:homepage>None</foaf:homepage>
+        <foaf:mbox>dataset@eva.mpg.de</foaf:mbox>
+    </foaf:Organization>
+    <dctype:Software rdf:about="https://github.com/clld/clld">
+        <dcterms:identifier rdf:resource="https://github.com/clld/clld/releases/tag/1.4.1"/>
+    </dctype:Software>
+</rdf:RDF>

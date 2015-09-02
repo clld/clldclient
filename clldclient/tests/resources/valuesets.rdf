@@ -1,0 +1,30 @@
+<rdf:RDF xmlns:foaf="http://xmlns.com/foaf/0.1/"
+xmlns:owl="http://www.w3.org/2002/07/owl#"
+xmlns:bibo="http://purl.org/ontology/bibo/"
+xmlns:gold="http://purl.org/linguistics/gold/"
+xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+xmlns:void="http://rdfs.org/ns/void#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:isbd="http://iflastandards.info/ns/isbd/elements/"
+xmlns:frbr="http://purl.org/vocab/frbr/core#"
+xmlns:dctype="http://purl.org/dc/dcmitype/"
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+xmlns:dcterms="http://purl.org/dc/terms/"
+xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#"
+xmlns:lexvo="http://lexvo.org/ontology#">
+    
+    
+    <skos:Collection rdf:about="http://localhost:6543/valuesets">
+        <void:inDataset rdf:resource="http://localhost:6543/"/>
+        <rdfs:label xml:lang="en">Valuesets</rdfs:label>
+        <skos:prefLabel xml:lang="en">Valuesets</skos:prefLabel>
+        <dcterms:title xml:lang="en">Valuesets</dcterms:title>
+        <skos:hiddenLabel xml:lang="x-clld">valueset</skos:hiddenLabel>
+        <skos:scopeNote xml:lang="x-clld">index</skos:scopeNote>
+        <skos:member rdf:resource="http://localhost:6543/valuesets/valueset"/>
+        <skos:member rdf:resource="http://localhost:6543/valuesets/vs2"/>
+    </skos:Collection>
+</rdf:RDF>

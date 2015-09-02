@@ -1,0 +1,137 @@
+<rdf:RDF  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+xmlns:owl="http://www.w3.org/2002/07/owl#"
+xmlns:bibo="http://purl.org/ontology/bibo/"
+xmlns:gold="http://purl.org/linguistics/gold/"
+xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+xmlns:void="http://rdfs.org/ns/void#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:isbd="http://iflastandards.info/ns/isbd/elements/"
+xmlns:frbr="http://purl.org/vocab/frbr/core#"
+xmlns:dctype="http://purl.org/dc/dcmitype/"
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+xmlns:dcterms="http://purl.org/dc/terms/"
+xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#"
+xmlns:lexvo="http://lexvo.org/ontology#">
+    
+    
+    
+    
+    
+    <void:Dataset rdf:about="http://wals.info/">
+        <rdfs:label xml:lang="en">WALS Online</rdfs:label>
+        <skos:prefLabel xml:lang="en">WALS Online</skos:prefLabel>
+        <dcterms:title xml:lang="en">WALS Online</dcterms:title>
+        <dcterms:description xml:lang="en">The World Atlas of Language Structures Online</dcterms:description>
+        <foaf:homepage>http://wals.info/</foaf:homepage>
+        <dcterms:license rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
+        <dcterms:rightsHolder rdf:resource="http://www.eva.mpg.de"/>
+        <dcterms:publisher rdf:resource="http://www.eva.mpg.de"/>
+        <void:feature rdf:resource="http://www.w3.org/ns/formats/RDF_XML"/>
+        <void:feature rdf:resource="http://www.w3.org/ns/formats/Turtle"/>
+        <void:feature rdf:resource="http://www.w3.org/ns/formats/N3"/>
+        <void:feature rdf:resource="http://www.w3.org/ns/formats/N-Triples"/>
+        <void:subset rdf:resource="http://wals.info/chapter"/>
+        <void:subset rdf:resource="http://wals.info/feature"/>
+        <void:subset rdf:resource="http://wals.info/languoid"/>
+        <void:subset rdf:resource="http://wals.info/refdb"/>
+        <void:subset rdf:resource="http://wals.info/example"/>
+        <void:subset rdf:resource="http://wals.info/valuesets"/>
+        <void:subset rdf:resource="http://wals.info/values"/>
+        <void:subset rdf:resource="http://wals.info/languoid/family"/>
+        <void:subset rdf:resource="http://wals.info/genuss"/>
+        <dcterms:contributor rdf:parseType="Resource">
+            <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+            <foaf:name>Matthew S. Dryer</foaf:name>
+        </dcterms:contributor>
+        <dcterms:contributor rdf:parseType="Resource">
+            <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+            <foaf:name>Martin Haspelmath</foaf:name>
+        </dcterms:contributor>
+        <dcterms:bibliographicCitation>
+Dryer, Matthew S. &amp; Haspelmath, Martin (eds.) 2013.
+The World Atlas of Language Structures Online.
+Leipzig: Max Planck Institute for Evolutionary Anthropology.
+(Available online at http://wals.info, Accessed on 2015-08-06.)
+
+        </dcterms:bibliographicCitation>
+        <dcterms:subject rdf:resource="http://dbpedia.org/resource/Linguistics"/>
+    </void:Dataset>
+    
+    <void:Dataset rdf:about="http://wals.info/chapter">
+        <skos:prefLabel xml:lang="en">Contributions</skos:prefLabel>
+        <skos:hiddenLabel xml:lang="x-clld">contribution</skos:hiddenLabel>
+        <skos:example>http://wals.info/chapter/{id}</skos:example>
+        <void:rootResource rdf:resource="http://wals.info/chapter"/>
+    </void:Dataset>
+    
+    <void:Dataset rdf:about="http://wals.info/feature">
+        <skos:prefLabel xml:lang="en">Features</skos:prefLabel>
+        <skos:hiddenLabel xml:lang="x-clld">parameter</skos:hiddenLabel>
+        <skos:example>http://wals.info/feature/{id}</skos:example>
+        <void:rootResource rdf:resource="http://wals.info/feature"/>
+    </void:Dataset>
+    
+    <void:Dataset rdf:about="http://wals.info/languoid">
+        <skos:prefLabel xml:lang="en">Languages</skos:prefLabel>
+        <skos:hiddenLabel xml:lang="x-clld">language</skos:hiddenLabel>
+        <skos:example>http://wals.info/languoid/lect/wals_code_{id}</skos:example>
+        <void:rootResource rdf:resource="http://wals.info/languoid"/>
+    </void:Dataset>
+    
+    
+    <void:Dataset rdf:about="http://wals.info/refdb">
+        <skos:prefLabel xml:lang="en">Sources</skos:prefLabel>
+        <skos:hiddenLabel xml:lang="x-clld">source</skos:hiddenLabel>
+        <skos:example>http://wals.info/refdb/record/{id}</skos:example>
+        <void:rootResource rdf:resource="http://wals.info/refdb"/>
+    </void:Dataset>
+    
+    <void:Dataset rdf:about="http://wals.info/example">
+        <skos:prefLabel xml:lang="en">Sentences</skos:prefLabel>
+        <skos:hiddenLabel xml:lang="x-clld">sentence</skos:hiddenLabel>
+        <skos:example>http://wals.info/example/{id}</skos:example>
+        <void:rootResource rdf:resource="http://wals.info/example"/>
+    </void:Dataset>
+    
+    <void:Dataset rdf:about="http://wals.info/valuesets">
+        <skos:prefLabel xml:lang="en">Valuesets</skos:prefLabel>
+        <skos:hiddenLabel xml:lang="x-clld">valueset</skos:hiddenLabel>
+        <skos:example>http://wals.info/valuesets/{id}</skos:example>
+        <void:rootResource rdf:resource="http://wals.info/valuesets"/>
+    </void:Dataset>
+    
+    <void:Dataset rdf:about="http://wals.info/values">
+        <skos:prefLabel xml:lang="en">Values</skos:prefLabel>
+        <skos:hiddenLabel xml:lang="x-clld">value</skos:hiddenLabel>
+        <skos:example>http://wals.info/values/{id}</skos:example>
+        <void:rootResource rdf:resource="http://wals.info/values"/>
+    </void:Dataset>
+    
+    
+    
+    
+    <void:Dataset rdf:about="http://wals.info/languoid/family">
+        <skos:prefLabel xml:lang="en">Familys</skos:prefLabel>
+        <skos:hiddenLabel xml:lang="x-clld">family</skos:hiddenLabel>
+        <skos:example>http://wals.info/languoid/family/{id}</skos:example>
+        <void:rootResource rdf:resource="http://wals.info/languoid/family"/>
+    </void:Dataset>
+    
+    <void:Dataset rdf:about="http://wals.info/genuss">
+        <skos:prefLabel xml:lang="en">Genuss</skos:prefLabel>
+        <skos:hiddenLabel xml:lang="x-clld">genus</skos:hiddenLabel>
+        <skos:example>http://wals.info/languoid/genus/{id}</skos:example>
+        <void:rootResource rdf:resource="http://wals.info/genuss"/>
+    </void:Dataset>
+    <foaf:Organization rdf:about="http://www.eva.mpg.de">
+        <skos:prefLabel xml:lang="en">Max Planck Institute for Evolutionary Anthropology</skos:prefLabel>
+        <foaf:homepage>http://www.eva.mpg.de</foaf:homepage>
+        <foaf:mbox>wals@eva.mpg.de</foaf:mbox>
+    </foaf:Organization>
+    <dctype:Software rdf:about="https://github.com/clld/clld">
+        <dcterms:identifier rdf:resource="https://github.com/clld/clld/releases/tag/1.4.1"/>
+    </dctype:Software>
+</rdf:RDF>

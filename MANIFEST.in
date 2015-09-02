@@ -1,2 +1,3 @@
 include *.md LICENSE
+recursive-include clldclient *.rdf
 recursive-include clldclient *.json

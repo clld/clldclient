@@ -11,11 +11,6 @@ ISO_CODE_PATTERN = re.compile('[a-z]{3}$')
 
 
 class Languoid(Language):
-    def _get_first_resource(self, property_):
-        urirefs = self[property_]
-        if urirefs:
-            return self.client.resource(urirefs[0])
-
     @property
     def parent(self):
         return self._get_first_resource('skos:broader')
