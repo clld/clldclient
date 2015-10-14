@@ -49,7 +49,7 @@ class Response(object):
         self.url = url
         self.host = host
         self._content = content
-        self.headers = json.loads(headers)
+        self.headers = {k.lower(): v for k, v in json.loads(headers).items()}
 
     @property
     def canonical_url(self):
