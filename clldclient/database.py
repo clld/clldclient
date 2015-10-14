@@ -12,7 +12,7 @@ from rdflib import URIRef, Literal
 from rdflib.namespace import VOID, SKOS, DCTERMS, RDFS, RDF, OWL, XSD, Namespace
 from purl import URL
 from uritemplate import expand
-from six import string_types, text_type
+from six import string_types, text_type, PY3
 
 from clldclient.cache import Cache
 from clldclient.table import Table
@@ -46,7 +46,8 @@ class RdfResource(object):
         self.type = rtype
         self.client = client
         assert res.mimetype == 'application/rdf+xml'
-        self.uriref = URIRef(res.canonical_url)
+        self.uriref = URIRef(
+            text_type(res.canonical_url) if PY3 else res.canonical_url)
         self.g = res.content
 
     @property
