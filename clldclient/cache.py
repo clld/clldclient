@@ -9,7 +9,6 @@ import datetime
 import json
 from collections import OrderedDict
 import logging
-log = logging.getLogger(__name__)
 
 from appdirs import user_cache_dir
 from sqlalchemy import (
@@ -21,9 +20,10 @@ from purl import URL
 
 import clldclient
 from clldclient.link_header import get_links
-from clldclient.util import graph, NO_DEFAULT, b
+from clldclient.util import graph, NO_DEFAULT
 
 
+log = logging.getLogger(__name__)
 metadata = MetaData()
 responses = Table(
     'responses',
@@ -33,7 +33,8 @@ responses = Table(
     Column('host', String(convert_unicode=True)),
     Column('request_url', String(convert_unicode=True)),  # the initially requested URL
     Column('accept', String(convert_unicode=True)),
-    Column('url', String(convert_unicode=True)),  # the returned URL, potentially after following redirects
+    # the returned URL, potentially after following redirects
+    Column('url', String(convert_unicode=True)),
     Column('headers', String(convert_unicode=True)),
     Column('content', Binary),
 )

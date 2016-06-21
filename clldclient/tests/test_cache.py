@@ -10,8 +10,6 @@ import time
 from httmock import all_requests, response, HTTMock
 from mock import patch, Mock
 
-from clldclient.util import b
-
 
 @all_requests
 def clld(url, request):
