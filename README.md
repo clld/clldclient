@@ -5,6 +5,8 @@ the databases published on the [CLLD](http://clld.org) platform.
 
 [![Build Status](https://travis-ci.org/clld/clldclient.svg?branch=v1.0.1)](https://travis-ci.org/clld/clldclient)
 [![codecov.io](http://codecov.io/github/clld/clldclient/coverage.svg?branch=master)](http://codecov.io/github/clld/clldclient?branch=master)
+[![PyPI](https://img.shields.io/pypi/v/pycldf.svg)](https://pypi.python.org/pypi/clldclient)
+
 
 ## Installation
 
