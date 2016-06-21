@@ -30,11 +30,11 @@ responses = Table(
     metadata,
     Column('pk', Integer, primary_key=True),
     Column('created', DateTime, default=datetime.datetime.utcnow),
-    Column('host', String),
-    Column('request_url', String),  # the initially requested URL
-    Column('accept', String),
-    Column('url', String),  # the returned URL, potentially after following redirects
-    Column('headers', String),
+    Column('host', String(convert_unicode=True)),
+    Column('request_url', String(convert_unicode=True)),  # the initially requested URL
+    Column('accept', String(convert_unicode=True)),
+    Column('url', String(convert_unicode=True)),  # the returned URL, potentially after following redirects
+    Column('headers', String(convert_unicode=True)),
     Column('content', Binary),
 )
 
@@ -115,8 +115,8 @@ class Cache(object):
                 responses.c.headers,
                 responses.c.content])
             .where(and_(
-                responses.c.request_url == url.as_string().encode('utf8'),
-                responses.c.accept == b(headers.get('Accept', ''))))
+                responses.c.request_url == url.as_string(),
+                responses.c.accept == headers.get('Accept', '')))
         ).fetchone()
         if not row:
             log.info('cache miss %s' % url)
@@ -135,10 +135,10 @@ class Cache(object):
         if response.status_code == requests.codes.ok:
             values = OrderedDict()
             values['created'] = datetime.datetime.utcnow()
-            values['host'] = url.host().encode('utf8')
-            values['request_url'] = url.as_string().encode('utf8')
-            values['accept'] = b(headers.get('Accept', ''))
-            values['url'] = response.url.encode('utf8')
+            values['host'] = url.host()
+            values['request_url'] = url.as_string()
+            values['accept'] = headers.get('Accept', '')
+            values['url'] = response.url
             values['headers'] = json.dumps(dict(response.headers.items()))
             values['content'] = response.content
             self.db.execute(responses.insert().values(**values))
@@ -164,7 +164,7 @@ class Cache(object):
     def purge(self, host=None, before=None, after=None):
         sql = responses.delete()
         if host:
-            sql = sql.where(responses.c.host == b(host))
+            sql = sql.where(responses.c.host == host)
         if before:
             sql = sql.where(responses.c.created < before)
         if after:
