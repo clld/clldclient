@@ -1,9 +1,9 @@
 # clldclient
 
-<blockquote style="background-color: #fbe8e8; border-left: 5px solid #d9534f">
+<div style="background-color: #fbe8e8; border-left: 5px solid #d9534f">
 <strong>clldclient</strong> is deprecated. We are moving to a new model to access the data served by clld applications
 based on <a href="http://cldf.clld.org">CLDF</a> as exchange format.
-</blockquote>
+</div>
 
 Functionality to access the API of [clld](https://github.com/clld/clld) apps, e.g.
 the databases published on the [CLLD](http://clld.org) platform.
